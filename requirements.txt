@@ -9,3 +9,4 @@ scikit-learn
 openpyxl
 networkx
 jupyter
+pyyaml
