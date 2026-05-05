@@ -1,0 +1,2 @@
+start,end,path_exists,path_length,cumulative_weighted_score,n_positive_steps,n_nonnegative_steps,n_negative_steps,minimum_step_effect_on_path,mean_step_effect_on_path,mean_log_reproducibility_on_path,sd_floor,score_definition
+WWWWWWWW,OOOOOOOO,True,8,2.9139567889737714,3,3,5,-2.138544599983721,0.06450536718808664,0.39958131796927515,0.1,mean_step * log10(|mean_step|/(SD + floor) + 1)

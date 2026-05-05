@@ -1,0 +1,4 @@
+library_id,start_genotype,end_genotype,has_uphill_path_start_to_end,shortest_uphill_path_length,n_nodes_reachable_from_start,shortest_path
+1,WWWWWWWW,OOOOOOOO,False,,18,
+2,WWWWWWWW,OOOOOOOO,False,,21,
+3,WWWWWWWW,OOOOOOOO,False,,13,

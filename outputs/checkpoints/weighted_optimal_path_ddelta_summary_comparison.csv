@@ -1,0 +1,10 @@
+metric,archived,recalculated,difference
+path_exists,True,True,
+path_length,8,8,0.0
+cumulative_weighted_score,2.913956788973772,2.9139567889737714,-4.440892098500626e-16
+n_positive_steps,3,3,0.0
+n_nonnegative_steps,3,3,0.0
+n_negative_steps,5,5,0.0
+minimum_step_effect_on_path,-2.138544599983721,-2.138544599983721,0.0
+mean_step_effect_on_path,0.0645053671880865,0.06450536718808664,1.3877787807814457e-16
+mean_log_reproducibility_on_path,0.3995813179692751,0.39958131796927515,5.551115123125783e-17
