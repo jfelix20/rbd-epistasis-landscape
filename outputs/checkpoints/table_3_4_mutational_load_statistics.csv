@@ -1,0 +1,7 @@
+Comparison,Statistic,Value,p_value,Formatted,n_values,calculation_note
+"Pearson r (Lib1 vs Lib2, Pos)",r,0.9456053350382565,0.00011716297484623537,0.946 (p = 1.17e-04),9,Pearson correlation across mutational-load mean Pos/Pre enrichment values
+"Pearson r (Lib1 vs Lib3, Pos)",r,0.8854674880944566,0.0014942066513652277,0.885 (p = 1.49e-03),9,Pearson correlation across mutational-load mean Pos/Pre enrichment values
+"Pearson r (Lib2 vs Lib3, Pos)",r,0.9104687488666934,0.0006471825699438526,0.910 (p = 6.47e-04),9,Pearson correlation across mutational-load mean Pos/Pre enrichment values
+"Load 8 vs others (Pos, Lib1)",Mann–Whitney p,0.109375,0.109375,0.109,1 vs 255,Mann–Whitney U test comparing genotype-level Pos/Pre enrichment for load 8 versus all other genotypes
+"Load 8 vs others (Pos, Lib2)",Mann–Whitney p,0.0859375,0.0859375,0.0859,1 vs 255,Mann–Whitney U test comparing genotype-level Pos/Pre enrichment for load 8 versus all other genotypes
+"Load 8 vs others (Pos, Lib3)",Mann–Whitney p,0.078125,0.078125,0.0781,1 vs 255,Mann–Whitney U test comparing genotype-level Pos/Pre enrichment for load 8 versus all other genotypes

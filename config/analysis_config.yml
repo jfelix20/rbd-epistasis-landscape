@@ -18,3 +18,8 @@ min_sample_total_umi: 0
 
 # Pseudocount used for log2 fold-change calculations.
 epsilon: 1.0e-6
+
+# Plotting/display thresholds for volcano and histogram figures.
+ddelta_negative_cutoff: -1.0
+ddelta_positive_cutoff: 1.0
+qvalue_cutoff: 0.05

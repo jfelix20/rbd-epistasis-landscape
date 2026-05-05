@@ -1,0 +1,13 @@
+library_id,quadrant,n_genotypes
+1,Pos depleted / Neg depleted,113
+1,Pos depleted / Neg enriched,39
+1,Pos enriched / Neg depleted,34
+1,Pos enriched / Neg enriched,70
+2,Pos depleted / Neg depleted,91
+2,Pos depleted / Neg enriched,56
+2,Pos enriched / Neg depleted,58
+2,Pos enriched / Neg enriched,51
+3,Pos depleted / Neg depleted,85
+3,Pos depleted / Neg enriched,61
+3,Pos enriched / Neg depleted,62
+3,Pos enriched / Neg enriched,48

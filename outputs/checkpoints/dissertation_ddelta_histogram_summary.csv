@@ -1,0 +1,4 @@
+library_id,n_genotypes,n_negative_significant,n_neutral_significant,n_positive_significant,n_insignificant
+1,256,81,147,25,3
+2,256,84,115,55,2
+3,256,47,154,53,2
