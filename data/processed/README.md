@@ -62,6 +62,18 @@ This file is a downstream figure-source table focused on Pos-vs-Neg delta-delta-
 
 It is included as a checkpoint from the final analysis run and as a source for reproducing dissertation-associated volcano visualizations.
 
+### `amino_acid_frequency_matrix_prefilter_dissertation_heatmap.csv`
+
+Processed amino-acid frequency matrix used to reproduce the dissertation-facing amino-acid replicate correlation heatmap.
+
+Rows correspond to sequencing samples, and columns correspond to site/amino-acid frequency features. This matrix reflects the pre-filtered amino-acid frequency representation used for the original dissertation figure.
+
+### `amino_acid_frequency_matrix_design_sites_filtered_heatmap.csv`
+
+Filtered/design-site amino-acid frequency matrix retained for comparison.
+
+Rows correspond to sequencing samples, and columns correspond to amino-acid frequency features across the designed mutation sites. This matrix produces a different replicate correlation structure from the dissertation-facing pre-filtered matrix and is retained to document the effect of filtering/feature selection on the amino-acid frequency heatmap.
+
 ## Processing hierarchy
 
 The tracked processed tables follow this approximate analysis hierarchy:
