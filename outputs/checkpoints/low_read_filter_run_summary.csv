@@ -1,0 +1,5 @@
+cutoff_total_umi_count,n_samples_retained,n_rows_counts,n_pooled_rows,n_landscape_rows,n_libraries,n_genotypes_total
+0,22,5451,2304,768,3,768
+1000,20,5105,2304,768,3,768
+10000,19,4857,2304,768,3,768
+100000,16,4096,2304,768,3,768

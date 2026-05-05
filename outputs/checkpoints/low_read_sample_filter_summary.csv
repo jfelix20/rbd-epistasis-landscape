@@ -1,0 +1,5 @@
+cutoff_total_umi_count,n_samples_retained,n_samples_excluded,excluded_samples
+0,22,0,
+1000,20,2,Library-2-Pos-2; Library-3-Pre-2
+10000,19,3,Library-2-Pos-2; Library-3-Pre-2; Library-2-Pre-2
+100000,16,6,Library-2-Pos-2; Library-3-Pre-2; Library-2-Pre-2; Library-1-Neg-2; Library-3-Pos-1; Library-1-Pre-2
