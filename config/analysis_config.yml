@@ -1,0 +1,20 @@
+# Analysis configuration for the SARS-CoV-2 RBD W/O genotype landscape workflow.
+#
+# The default settings reproduce the dissertation-associated processed analysis.
+# Alternative low-read sample cutoffs can be tested in:
+# notebooks/02_low_read_filter_sensitivity.ipynb
+
+analysis_mode: dissertation_baseline
+
+# Minimum total UMI count required for a sequencing sample to be included.
+# Set to 0 to reproduce the dissertation-associated analysis using all samples
+# present in data/processed/wo_counts.csv.
+#
+# Tested alternatives:
+#   1000
+#   10000
+#   100000
+min_sample_total_umi: 0
+
+# Pseudocount used for log2 fold-change calculations.
+epsilon: 1.0e-6
