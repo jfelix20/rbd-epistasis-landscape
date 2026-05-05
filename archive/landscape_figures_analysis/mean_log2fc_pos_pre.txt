@@ -1,0 +1,107 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
+from mpl_toolkits.mplot3d import Axes3D
+
+# ========================================
+# 1. Load the merged dataset
+# ========================================
+df = pd.read_excel("human_with_experimental_landscape_jons_data.xlsx")
+
+# ========================================
+# 2. Choose your fitness metric
+# ========================================
+FITNESS_COL = "mean_log2fc_pos_pre"   # or "delta_log2fc_pos_minus_neg"
+
+if FITNESS_COL not in df.columns:
+    raise KeyError(f"{FITNESS_COL} not found! Check column names.")
+
+# ========================================
+# 3. Convert binary_8 to x,y coordinates
+# x = bits 1–4, y = bits 5–8
+# ========================================
+def binary_to_xy(bin_str):
+    bin_str = str(bin_str).zfill(8)
+    x = int(bin_str[:4], 2)  # bits 1–4
+    y = int(bin_str[4:], 2)  # bits 5–8
+    return x, y
+
+df["x"], df["y"] = zip(*df["binary_8"].apply(binary_to_xy))
+df["fitness"] = df[FITNESS_COL]
+
+# ========================================
+# 4. Prepare grid for interpolated landscape
+# ========================================
+grid_x, grid_y = np.mgrid[
+    df["x"].min():df["x"].max():100j,
+    df["y"].min():df["y"].max():100j
+]
+
+grid_z = griddata(
+    points=df[["x", "y"]].values,
+    values=df["fitness"].values,
+    xi=(grid_x, grid_y),
+    method="cubic"
+)
+
+# ========================================
+# 5. Plot 2D heatmap
+# ========================================
+plt.figure(figsize=(8, 6))
+plt.imshow(
+    grid_z.T,
+    origin="lower",
+    extent=(df["x"].min(), df["x"].max(), df["y"].min(), df["y"].max()),
+    cmap="viridis",
+    aspect="auto"
+)
+plt.colorbar(label=f"Fitness ({FITNESS_COL})")
+plt.scatter(df["x"], df["y"], c="white", s=10, alpha=0.7)
+
+# Mark Wuhan (00000000) and Omicron (11111111)
+wuhan = df[df["binary_8"] == "00000000"]
+omicron = df[df["binary_8"] == "11111111"]
+
+if not wuhan.empty:
+    plt.scatter(wuhan["x"], wuhan["y"], c="red", s=80, label="Wuhan")
+if not omicron.empty:
+    plt.scatter(omicron["x"], omicron["y"], c="cyan", s=80, label="Omicron")
+
+plt.title("Experimental Fitness Landscape (2D Heatmap)")
+plt.xlabel("Bits 1–4 (x)")
+plt.ylabel("Bits 5–8 (y)")
+plt.legend()
+plt.show()
+
+# ========================================
+# 6. Plot 3D surface
+# ========================================
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection="3d")
+
+surf = ax.plot_surface(
+    grid_x,
+    grid_y,
+    grid_z,
+    cmap="viridis",
+    linewidth=0,
+    antialiased=True,
+    alpha=0.9
+)
+
+ax.set_xlabel("Bits 1–4 (x)")
+ax.set_ylabel("Bits 5–8 (y)")
+ax.set_zlabel(f"Fitness ({FITNESS_COL})")
+ax.set_title("Experimental Fitness Landscape (3D Surface)")
+fig.colorbar(surf, shrink=0.5, aspect=10)
+
+# Mark Wuhan & Omicron in 3D
+if not wuhan.empty:
+    ax.scatter(wuhan["x"], wuhan["y"], wuhan["fitness"], c="red", s=60)
+if not omicron.empty:
+    ax.scatter(omicron["x"], omicron["y"], omicron["fitness"], c="cyan", s=60)
+
+plt.show()
+
+print("Plots generated successfully.")

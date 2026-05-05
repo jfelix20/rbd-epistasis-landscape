@@ -1,0 +1,2 @@
+n_total_directed_one_step_edges,n_filtered_uphill_repro_edges,fraction_filtered,reproducibility_threshold,sd_floor,sum_path_exists,sum_path_score,sum_path_length,bottleneck_path_exists,bottleneck_path_score,bottleneck_path_length
+1024,172,0.16796875,0.3,0.1,False,,,False,,

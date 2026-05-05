@@ -1,0 +1,258 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import cm, colors
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
+
+# =========================================================
+# SETTINGS
+# =========================================================
+CSV_PATH = "/Users/jonathanfelix/Documents/Yeast_Lib_Final_Deduplicated/Summary_Figures/WO_landscape_ddelta_posneg_volcano_source.csv"
+
+# Node metric (z-axis + node color)
+FITNESS_COL = "log2fc_pos_pre"
+
+# Metric used to order genotypes left-to-right within each mutational-load row
+ORDER_COL = "log2fc_pos_pre"
+
+# True -> lowest on left, highest on right
+ASCENDING = True
+
+# Edge reproducibility settings
+EPS = 1e-6
+EDGE_WIDTH_MIN = 0.3
+EDGE_WIDTH_MAX = 3.0
+EDGE_ALPHA = 0.85
+EDGE_CMAP = "Greys"   # reproducibility shading
+NODE_CMAP = "turbo"
+POINT_SIZE = 36
+
+# =========================================================
+# 1. LOAD AND CLEAN DATA
+# =========================================================
+df = pd.read_csv(CSV_PATH)
+
+required = {"library_id", "wo", "mut_count", FITNESS_COL, ORDER_COL}
+missing = required - set(df.columns)
+if missing:
+    raise KeyError(f"Missing required columns: {missing}")
+
+keep_cols = ["library_id", "wo", "mut_count"]
+for col in [FITNESS_COL, ORDER_COL]:
+    if col not in keep_cols:
+        keep_cols.append(col)
+
+df = df[keep_cols].copy()
+df = df.replace([np.inf, -np.inf], np.nan)
+df[FITNESS_COL] = pd.to_numeric(df[FITNESS_COL], errors="coerce")
+df[ORDER_COL] = pd.to_numeric(df[ORDER_COL], errors="coerce")
+df["mut_count"] = pd.to_numeric(df["mut_count"], errors="coerce")
+df = df.dropna(subset=["library_id", "wo", "mut_count", FITNESS_COL, ORDER_COL]).copy()
+
+# =========================================================
+# 2. BUILD CONSENSUS X ORDER WITHIN EACH MUTATIONAL LOAD
+# =========================================================
+order_df = (
+    df.groupby(["wo", "mut_count"], as_index=False)[ORDER_COL]
+      .mean()
+      .rename(columns={ORDER_COL: "order_value"})
+)
+
+order_df = order_df.sort_values(
+    by=["mut_count", "order_value", "wo"],
+    ascending=[True, ASCENDING, True]
+).copy()
+
+order_df["rank_within_load"] = order_df.groupby("mut_count").cumcount()
+
+row_sizes = order_df.groupby("mut_count")["wo"].count().to_dict()
+
+def centered_x(row):
+    n = row_sizes[row["mut_count"]]
+    return row["rank_within_load"] - (n - 1) / 2.0
+
+order_df["x"] = order_df.apply(centered_x, axis=1)
+order_df["y"] = order_df["mut_count"]
+
+# =========================================================
+# 3. AVERAGE ACROSS LIBRARIES BY GENOTYPE (for nodes)
+# =========================================================
+avg_df = (
+    df.groupby(["wo", "mut_count"], as_index=False)
+      .agg(mean_fitness=(FITNESS_COL, "mean"))
+)
+
+avg_df = avg_df.merge(
+    order_df[["wo", "mut_count", "x", "y"]],
+    on=["wo", "mut_count"],
+    how="left"
+)
+
+node_pos = dict(zip(avg_df["wo"], zip(avg_df["x"], avg_df["y"], avg_df["mean_fitness"])))
+
+# =========================================================
+# 4. EDGE HELPERS
+# =========================================================
+def hamming_distance_wo(a: str, b: str) -> int:
+    return sum(ch1 != ch2 for ch1, ch2 in zip(a, b))
+
+def step_direction(a_row, b_row):
+    """
+    Orient edge from lower mut_count -> higher mut_count.
+    If equal mut_count (should not happen for Hamming=1 in this design),
+    fall back to lexical order.
+    """
+    if a_row["mut_count"] < b_row["mut_count"]:
+        return a_row, b_row
+    elif b_row["mut_count"] < a_row["mut_count"]:
+        return b_row, a_row
+    else:
+        return (a_row, b_row) if a_row["wo"] < b_row["wo"] else (b_row, a_row)
+
+# Build fast lookup of genotype rows by library
+lib_lookup = {}
+for lib in sorted(df["library_id"].unique()):
+    sub = df[df["library_id"] == lib].copy()
+    lib_lookup[lib] = sub.set_index("wo")
+
+# =========================================================
+# 5. BUILD ONE-STEP EDGES WITH REPRODUCIBILITY WEIGHTS
+#    Reproducibility score = |mean step effect| / (SD across libraries + EPS)
+# =========================================================
+genotypes = sorted(avg_df["wo"].unique())
+edge_records = []
+
+for i, g1 in enumerate(genotypes):
+    for g2 in genotypes[i + 1:]:
+        if hamming_distance_wo(g1, g2) != 1:
+            continue
+
+        # use average dataframe to determine orientation by mutational load
+        row1 = avg_df.loc[avg_df["wo"] == g1].iloc[0]
+        row2 = avg_df.loc[avg_df["wo"] == g2].iloc[0]
+        low_row, high_row = step_direction(row1, row2)
+        low_g, high_g = low_row["wo"], high_row["wo"]
+
+        step_effects = []
+        for lib, lookup in lib_lookup.items():
+            if low_g in lookup.index and high_g in lookup.index:
+                low_val = lookup.loc[low_g, FITNESS_COL]
+                high_val = lookup.loc[high_g, FITNESS_COL]
+                step_effects.append(high_val - low_val)
+
+        if len(step_effects) == 0:
+            continue
+
+        step_effects = np.asarray(step_effects, dtype=float)
+        mean_step = step_effects.mean()
+        sd_step = step_effects.std(ddof=1) if len(step_effects) > 1 else 0.0
+        reproducibility = np.abs(mean_step) / (sd_step + EPS)
+
+        edge_records.append({
+            "wo_a": low_g,
+            "wo_b": high_g,
+            "mean_step": mean_step,
+            "sd_step": sd_step,
+            "reproducibility": reproducibility,
+            "n_libs": len(step_effects),
+        })
+
+edges_df = pd.DataFrame(edge_records)
+
+if edges_df.empty:
+    raise RuntimeError("No valid one-step edges were constructed.")
+
+# Scale edge width by reproducibility
+rep_min = edges_df["reproducibility"].min()
+rep_max = edges_df["reproducibility"].max()
+
+if rep_max == rep_min:
+    edges_df["edge_width"] = (EDGE_WIDTH_MIN + EDGE_WIDTH_MAX) / 2.0
+else:
+    edges_df["edge_width"] = EDGE_WIDTH_MIN + (
+        (edges_df["reproducibility"] - rep_min) / (rep_max - rep_min)
+    ) * (EDGE_WIDTH_MAX - EDGE_WIDTH_MIN)
+
+# Edge color by reproducibility as well
+rep_norm = colors.Normalize(vmin=rep_min, vmax=rep_max)
+edge_cmap = cm.get_cmap(EDGE_CMAP)
+
+# =========================================================
+# 6. PLOT 3D NETWORK
+# =========================================================
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111, projection="3d")
+
+# draw reproducibility-weighted edges first
+for _, edge in edges_df.iterrows():
+    x1, y1, z1 = node_pos[edge["wo_a"]]
+    x2, y2, z2 = node_pos[edge["wo_b"]]
+    edge_color = edge_cmap(rep_norm(edge["reproducibility"]))
+    ax.plot(
+        [x1, x2], [y1, y2], [z1, z2],
+        color=edge_color,
+        alpha=EDGE_ALPHA,
+        linewidth=edge["edge_width"],
+        zorder=1
+    )
+
+# draw averaged nodes
+sc = ax.scatter(
+    avg_df["x"],
+    avg_df["y"],
+    avg_df["mean_fitness"],
+    c=avg_df["mean_fitness"],
+    cmap=NODE_CMAP,
+    s=POINT_SIZE,
+    edgecolors="black",
+    linewidths=0.25,
+    depthshade=False,
+    zorder=2
+)
+
+ax.set_xlabel("Genotypes ordered within mutational load")
+ax.set_ylabel("Mutational load")
+ax.set_zlabel(FITNESS_COL)
+ax.set_title("Average 3D Genotype Network Across Libraries\nEdges weighted by between-library reproducibility")
+
+ax.set_xticks([])
+ax.set_yticks(range(0, 9))
+ax.set_ylim(8.2, -0.2)  # Wuhan -> Omicron BA.1
+
+# Label reference genotypes
+labels = {
+    "WWWWWWWW": "Wuhan",
+    "OOOOOOOO": "Omicron BA.1",
+}
+for genotype, label in labels.items():
+    ref = avg_df[avg_df["wo"] == genotype]
+    if not ref.empty:
+        row = ref.iloc[0]
+        ax.scatter(
+            [row["x"]], [row["y"]], [row["mean_fitness"]],
+            s=82, c="black", depthshade=False, zorder=3
+        )
+        ax.text(
+            row["x"], row["y"], row["mean_fitness"],
+            f"  {label}",
+            color="black",
+            zorder=4
+        )
+
+# Node colorbar
+cbar_nodes = fig.colorbar(sc, shrink=0.58, aspect=16, pad=0.08)
+cbar_nodes.set_label(FITNESS_COL)
+
+# Edge reproducibility colorbar
+sm = cm.ScalarMappable(norm=rep_norm, cmap=edge_cmap)
+sm.set_array([])
+cbar_edges = fig.colorbar(sm, shrink=0.58, aspect=16, pad=0.02)
+cbar_edges.set_label("Edge reproducibility = |mean step| / SD across libraries")
+
+plt.tight_layout()
+plt.show()
+
+print("Plotted averaged 3D genotype network with reproducibility-weighted edges.")
+print("Edge direction is defined from lower mutational load -> higher mutational load.")
+print(f"Node z-axis/color metric: {FITNESS_COL}")
+print("Edge weight metric: |mean step effect| / SD across libraries")

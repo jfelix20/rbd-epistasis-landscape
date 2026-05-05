@@ -1,0 +1,2 @@
+source,target,mut_source,mut_target,mean_step,sd_step,raw_reproducibility,log_reproducibility,reliable_uphill_score,source_mean_fitness,target_mean_fitness
+WWWWWWWW,WWWWWWOW,0,1,0.38766548912139603,0.18241493818853144,1.3726805373963702,0.3752392678483172,0.1454673143079724,0.417903528573029,0.8055690176944251

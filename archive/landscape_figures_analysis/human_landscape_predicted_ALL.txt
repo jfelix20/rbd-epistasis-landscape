@@ -1,0 +1,73 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+from matplotlib import cm
+import numpy as np
+from scipy.interpolate import griddata
+from mpl_toolkits.mplot3d import Axes3D
+
+# === Load mouse variant data with raw ΔG ===
+df = pd.read_excel("predicted_ModelAll_Anchored_human.xlsx")
+
+# Generate 8-bit binary string from Variant_new index
+df['binary'] = df['Variant_new'].apply(lambda x: format(int(x - 1), '08b'))
+
+# Drop rows with missing ΔG (e.g., blank for Wuhan)
+df = df.dropna(subset=['Predicted_ΔG'])
+
+# ➕ Filter for ΔG between 5 and 15
+df = df[(df['Predicted_ΔG'] <= -5) & (df['Predicted_ΔG'] >= -15)]
+
+# Define x = bits 1–4, y = bits 5–8
+df['x'] = df['binary'].apply(lambda b: int(b[:4], 2))
+df['y'] = df['binary'].apply(lambda b: int(b[4:], 2))
+
+# Flip ΔG so tighter binding = higher Z
+df['z'] = -df['Predicted_ΔG']
+
+# Normalize color mapping
+norm = Normalize(vmin=df['z'].min(), vmax=df['z'].max())
+colors = cm.coolwarm(norm(df['z']))
+
+# Interpolation grid
+xi = np.linspace(df['x'].min(), df['x'].max(), 50)
+yi = np.linspace(df['y'].min(), df['y'].max(), 50)
+xi, yi = np.meshgrid(xi, yi)
+zi = griddata((df['x'], df['y']), df['z'], (xi, yi), method='cubic')
+
+# === Plot landscape ===
+fig = plt.figure(figsize=(16, 12))
+ax = fig.add_subplot(111, projection='3d')
+fig.suptitle(
+    "Human ACE2 Binding Landscape Based on Predicted_ΔG",
+    fontsize=15,
+    y=0.85  # Lower values move it closer to the plot
+)
+
+
+# Interpolated surface
+surf = ax.plot_surface(xi, yi, zi, cmap='coolwarm', edgecolor='none', alpha=0.9)
+
+# Label Variant 2 as Wuhan
+wuhan = df[df['Variant_new'] == 1]
+ax.scatter(wuhan['x'], wuhan['y'], wuhan['z'], color='blue', s=100, label='Wuhan')
+
+# Label Omicron (binary = 11111111)
+omicron = df[df['binary'] == '11111111']
+ax.scatter(omicron['x'], omicron['y'], omicron['z'], color='red', s=100, label='Omicron')
+
+# Labels and formatting
+ax.set_xlabel("Bits 1–4 (X)")
+ax.set_ylabel("Bits 5–8 (Y)")
+ax.set_zlabel("−ΔG → Affinity (Z)")
+ax.set_zlim(5, 15)
+ax.legend(loc='upper left', bbox_to_anchor=(0.02, 0.98))
+
+
+# Add colorbar
+sm = cm.ScalarMappable(norm=norm, cmap='coolwarm')
+sm.set_array(df['z'])
+cbar = fig.colorbar(sm, ax=ax, shrink=0.6, pad=0.1)
+cbar.set_label("−ΔG (Binding Strength) ", rotation=270, labelpad=15)
+
+plt.show()
