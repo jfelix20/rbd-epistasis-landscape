@@ -1,0 +1,9 @@
+dissertation_item,description,target_output,status
+Figure 3.12,Pairwise epistasis heatmaps across experimental libraries,figure_3_12_pairwise_epistasis_heatmaps.png,pending
+Figure 3.13,Distribution of pairwise epistasis across genetic backgrounds,figure_3_13_pairwise_epistasis_distributions.png,pending
+Figure 3.14,Cross-library comparison of signed pairwise epistasis,figure_3_14_pairwise_epistasis_cross_library_comparison.png,pending
+Figure 3.15,Pairwise epistatic interaction network,figure_3_15_pairwise_epistasis_network.png,pending
+Figure 3.16,Variance decomposition of the landscape by epistasis order,figure_3_16_variance_decomposition_by_order.png,pending
+Figure 3.17,Distribution of third-order epistasis across genetic background,figure_3_17_third_order_epistasis_distributions.png,pending
+Figure 3.18,Cross-library comparison of third-order epistatic interaction coefficients,figure_3_18_third_order_epistasis_cross_library_comparison.png,pending
+Table 3.7,Cross-library correlation of pairwise epistasis estimates,table_3_7_pairwise_epistasis_cross_library_correlations.csv,pending
