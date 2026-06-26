@@ -1,0 +1,10 @@
+table_a,table_b,n_a,n_b,n_overlap,n_a_not_b,n_b_not_a
+linear_reg_predictions,linear_reg_predictions,256,256,256,0,0
+linear_reg_predictions,human_experimental,256,256,256,0,0
+linear_reg_predictions,human_residual,256,256,256,0,0
+human_experimental,linear_reg_predictions,256,256,256,0,0
+human_experimental,human_experimental,256,256,256,0,0
+human_experimental,human_residual,256,256,256,0,0
+human_residual,linear_reg_predictions,256,256,256,0,0
+human_residual,human_experimental,256,256,256,0,0
+human_residual,human_residual,256,256,256,0,0

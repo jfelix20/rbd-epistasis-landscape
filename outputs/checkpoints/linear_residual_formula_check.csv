@@ -1,0 +1,2 @@
+formula,intercept,slope,r2,max_abs_difference,mean_abs_difference,pearson_r_with_existing_residual
+delta_log2fc_pos_minus_neg - linear_model(ΔΔG_pred),-0.48064550607043754,0.32844626774997837,0.009749698447218735,1.7763568394002505e-15,1.5720931501039814e-16,1.0

@@ -1,0 +1,9 @@
+x_column,y_column,n,pearson_r,p_value
+DeltaG_docking,residual_ΔΔG_pred,256,0.024323674979479005,0.6985107742581776
+DeltaDeltaG,residual_ΔΔG_pred,256,0.024323674979479,0.6985107742581776
+ΔΔG_pred,residual_ΔΔG_pred,256,-3.469446951953614e-18,1.0
+ΔG_pred_docking,residual_ΔΔG_pred,256,1.7694179454963432e-16,0.9999999999999974
+ΔG_pred_experimental,residual_ΔΔG_pred,256,-4.0592529337857286e-16,0.9999999999999942
+mean_log2fc_pos_pre,residual_ΔΔG_pred,256,0.9479672704394105,2.924898977776403e-128
+mean_log2fc_neg_pre,residual_ΔΔG_pred,256,0.10005816723232502,0.1102419766635483
+delta_log2fc_pos_minus_neg,residual_ΔΔG_pred,256,0.9951132104201921,2.0094946313801542e-257

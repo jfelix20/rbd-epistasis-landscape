@@ -1,0 +1,4 @@
+formula,max_abs_difference,mean_abs_difference,pearson_r_with_existing_residual
+experimental_minus_predicted,1.3905113727663425,0.4321323898734353,0.9800341051388484
+predicted_minus_experimental,10.343452883094452,2.352214774922293,-0.9800341051388484
+experimental_plus_predicted,3.0934377797502974,0.7289130017109284,0.9280501210444034

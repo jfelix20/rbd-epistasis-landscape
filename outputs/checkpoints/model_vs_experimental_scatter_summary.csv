@@ -1,0 +1,4 @@
+x_column,y_column,n,pearson_r,p_value
+ΔΔG_pred,delta_log2fc_pos_minus_neg,256,0.0987405613069862,0.11503247863120551
+ΔG_pred_experimental,delta_log2fc_pos_minus_neg,256,0.09874056130698586,0.11503247863120691
+residual_ΔΔG_pred,delta_log2fc_pos_minus_neg,256,0.9951132104201921,2.0094946313801542e-257

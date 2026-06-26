@@ -1,0 +1,4 @@
+table,n_rows,n_unique_Variant_new,n_unique_binary_8,has_wo
+linear_reg_predictions,256,256,256,False
+human_experimental,256,256,256,True
+human_residual,256,256,256,True
