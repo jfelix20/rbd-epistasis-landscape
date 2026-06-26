@@ -1,0 +1,10 @@
+file,relative_path,size_bytes,suffix
+.gitkeep,data/processed/.gitkeep,0,
+README.md,data/processed/README.md,4354,.md
+WO_genotype_counts_per_library_condition.csv,data/processed/WO_genotype_counts_per_library_condition.csv,118958,.csv
+WO_landscape_ddelta_posneg_volcano_source.csv,data/processed/WO_landscape_ddelta_posneg_volcano_source.csv,155505,.csv
+WO_landscape_per_library.csv,data/processed/WO_landscape_per_library.csv,139063,.csv
+WO_landscape_with_pvalues.csv,data/processed/WO_landscape_with_pvalues.csv,229039,.csv
+amino_acid_frequency_matrix_design_sites_filtered_heatmap.csv,data/processed/amino_acid_frequency_matrix_design_sites_filtered_heatmap.csv,7156,.csv
+amino_acid_frequency_matrix_prefilter_dissertation_heatmap.csv,data/processed/amino_acid_frequency_matrix_prefilter_dissertation_heatmap.csv,75142,.csv
+wo_counts.csv,data/processed/wo_counts.csv,207573,.csv

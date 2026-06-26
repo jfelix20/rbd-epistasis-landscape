@@ -1,0 +1,14 @@
+name,relative_path,type,size_bytes
+.DS_Store,.DS_Store,file,8196.0
+LICENSE,LICENSE,file,1065.0
+README.md,README.md,file,3503.0
+archive,archive,directory,
+config,config,directory,
+data,data,directory,
+docs,docs,directory,
+environment.yml,environment.yml,file,247.0
+figures,figures,directory,
+notebooks,notebooks,directory,
+outputs,outputs,directory,
+requirements.txt,requirements.txt,file,106.0
+src,src,directory,
