@@ -1,5 +1,5 @@
 category,check,status,n_items
-notebooks,all expected notebooks exist,False,8
+notebooks,all expected notebooks exist,True,8
 processed_data,processed data files inventoried,True,9
 figures,figure files inventoried,True,42
-checkpoints,checkpoint csv files inventoried,True,100
+checkpoints,checkpoint csv files inventoried,True,102
