@@ -1,9 +1,9 @@
 notebook,purpose,status,run_order,exists,relative_path
 00_project_setup_and_data_inventory.ipynb,"Project setup, path checks, and data inventory",complete,0,True,notebooks/00_project_setup_and_data_inventory.ipynb
-01_recalculate_wo_landscape_from_counts.ipynb,"Recalculate pooled frequencies, enrichment metrics, and landscape tables",complete,1,True,notebooks/01_recalculate_wo_landscape_from_counts.ipynb
+01_recalculate_wo_landscape_from_counts.ipynb,"Recalculate pooled frequencies, enrichment metrics, and W/O landscape tables",complete,1,True,notebooks/01_recalculate_wo_landscape_from_counts.ipynb
 02_low_read_filter_sensitivity.ipynb,Evaluate sample-level read-depth cutoff sensitivity,complete,2,True,notebooks/02_low_read_filter_sensitivity.ipynb
 03_dissertation_figures_from_landscape_tables.ipynb,Regenerate dissertation figures and summary tables from processed landscape outputs,complete,3,True,notebooks/03_dissertation_figures_from_landscape_tables.ipynb
 04_network_and_path_analysis.ipynb,Reproduce network/path analyses and weighted optimal path calculations,complete,4,True,notebooks/04_network_and_path_analysis.ipynb
 05_epistasis_analysis.ipynb,"Reproduce pairwise, third-order, and variance-decomposition epistasis analyses",complete,5,True,notebooks/05_epistasis_analysis.ipynb
-06_chris_model_comparison_and_residual_landscape.ipynb,Reconstruct Chris human-model comparison and residual landscape workflow,complete,6,True,notebooks/06_chris_model_comparison_and_residual_landscape.ipynb
+06_chris_model_comparison_and_residual_landscape.ipynb,Reconstruct archived human-model comparison and residual landscape workflow,complete,6,True,notebooks/06_chris_model_comparison_and_residual_landscape.ipynb
 07_repository_index_and_reproducibility_summary.ipynb,Final repository index and reproducibility summary,complete,7,True,notebooks/07_repository_index_and_reproducibility_summary.ipynb
